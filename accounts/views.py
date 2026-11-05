@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def login (request):
-    return HttpResponse('hello world')
+    return  render(request,'login/login.html',)
 
 
 # Create your views here.
