@@ -1,0 +1,389 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid pt-4 px-4">
+
+    <div class="bg-secondary rounded p-4">
+
+        <!-- Titre -->
+        <div class="mb-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                        role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <h3 class="mb-0">Gestion des projets</h3>
+        </div>
+
+        <!-- Barre de recherche et bouton Ajouter -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+            <!-- Bouton Ajouter à gauche -->
+            <div>
+                <button type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#projectModal"
+                        id="btnAddProject">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Ajouter un projet
+                </button>
+            </div>
+
+            <!-- Recherche à droite -->
+            <div>
+                <form method="GET" class="d-flex">
+                    <input
+                        type="text"
+                        name="q"
+                        class="form-control me-2"
+                        placeholder="Rechercher un projet..."
+                        value="{{ request.GET.q }}"
+                    >
+
+                    <button type="submit" class="btn btn-info">
+                        <i class="bi bi-search"></i>
+                        Rechercher
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Tableau des projets -->
+        <div class="table-responsive project-table-container" >
+
+            <table class="table table-hover table-bordered align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id Project</th>
+                        <th>Name Project</th>
+                        <th>Description</th>
+                        <th>Base URL</th>
+                        <th>Owner</th>
+                        <th>Created At</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for project in projects %}
+
+                    <tr>
+                        <td>{{ project.id_project }}</td>
+                        <td>{{ project.name_pr }}</td>
+                        <td>{{ project.description_pr }}</td>
+                        <td>{{ project.base_url }}</td>
+                        <td>{{ project.owner_id }}</td>
+                        <td>{{ project.created_at_p|date:"d/m/Y H:i" }}</td>
+
+                        <td class="text-center">
+
+                           <button type="button"
+                                    class="btn btn-warning btn-sm btn-edit-project"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#projectModal"
+                                    data-id="{{ project.id_project }}"
+                                    data-name="{{ project.name_pr }}"
+                                    data-description="{{ project.description_pr }}"
+                                    data-url="{{ project.base_url }}"
+                                    data-owner="{{ project.owner_id }}">
+
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+
+                          <button type="button"
+                                class="btn btn-danger btn-sm btn-delete-project"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteProjectModal"
+                                data-id="{{ project.id_project }}"
+                                data-name="{{ project.name_pr }}">
+                                <i class="bi bi-trash"></i>
+                          </button>
+                           
+
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            Aucun projet disponible
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteProjectModal"
+     tabindex="-1" aria-labelledby="deleteProjectModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteProjectModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Confirmation de suppression
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Fermer">
+                </button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <i class="bi bi-trash text-danger"
+                   style="font-size: 45px;"></i>
+
+                <h5 class="mt-3">
+                    Voulez-vous vraiment supprimer ce projet ?
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Projet :
+                    <strong id="deleteProjectName"></strong>
+                </p>
+
+                <p class="text-danger mt-2">
+                    Cette opération est irréversible.
+                </p>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+
+                <!-- NON -->
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Non
+                </button>
+
+                <!-- OUI -->
+                <form method="POST" action="{% url 'projects' %}">
+                    {% csrf_token %}
+
+                    <input type="hidden"
+                           name="action"
+                           value="delete">
+
+                    <input type="hidden"
+                           name="id_project"
+                           id="deleteProjectId">
+
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>
+                        Oui, supprimer
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal Ajouter / Modifier un projet -->
+<div class="modal fade" id="projectModal" tabindex="-1"
+     aria-labelledby="projectModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content bg-secondary">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectModalLabel">
+                    Ajouter un projet
+                </h5>
+
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Fermer"></button>
+            </div>
+
+            <form method="POST" action="{% url 'projects' %}">
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <!-- Identifiant : vide pour ajout, rempli pour modification -->
+                    <input type="hidden" name="id_project" id="id_project">
+
+                    <div class="mb-3">
+                        <label for="name_pr" class="form-label">
+                            Nom du projet
+                        </label>
+                        <input type="text" class="form-control"
+                               name="name_pr" id="name_pr"
+                               maxlength="100" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description_pr" class="form-label">
+                            Description
+                        </label>
+                        <textarea class="form-control"
+                                  name="description_pr"
+                                  id="description_pr"
+                                  maxlength="255"
+                                  rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="base_url" class="form-label">
+                            URL de base
+                        </label>
+                        <input type="url" class="form-control"
+                               name="base_url" id="base_url"
+                               placeholder="https://example.com"
+                               maxlength="100" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="owner_id" class="form-label">
+                            Identifiant du propriétaire
+                        </label>
+                        <input type="number" class="form-control"
+                               name="owner_id" id="owner_id"
+                               min="1" required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Annuler
+                    </button>
+
+                    <button type="submit" class="btn btn-primary"
+                            id="btnSubmitProject">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Valider
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+        <script>document.addEventListener("DOMContentLoaded", function () {
+
+            const modalTitle = document.getElementById("projectModalLabel");
+            const form = document.querySelector("#projectModal form");
+
+            const idProject = document.getElementById("id_project");
+            const nameProject = document.getElementById("name_pr");
+            const descriptionProject = document.getElementById("description_pr");
+            const baseUrl = document.getElementById("base_url");
+            const ownerId = document.getElementById("owner_id");
+
+            const submitButton = document.getElementById("btnSubmitProject");
+
+            // Mode AJOUT
+            document.getElementById("btnAddProject").addEventListener("click", function () {
+
+                form.reset();
+
+                idProject.value = "";
+
+                modalTitle.textContent = "Ajouter un projet";
+
+                submitButton.innerHTML =
+                    '<i class="bi bi-check-circle me-2"></i>Valider';
+            });
+
+            // Mode MODIFICATION
+            document.querySelectorAll(".btn-edit-project").forEach(function (button) {
+
+                button.addEventListener("click", function () {
+
+                    idProject.value = this.dataset.id;
+                    nameProject.value = this.dataset.name;
+                    descriptionProject.value = this.dataset.description;
+                    baseUrl.value = this.dataset.url;
+                    ownerId.value = this.dataset.owner;
+
+                    modalTitle.textContent = "Modifier le projet";
+
+                    submitButton.innerHTML =
+                        '<i class="bi bi-pencil-square me-2"></i>Enregistrer les modifications';
+                });
+
+            });
+
+        });
+        </script>
+
+                {% block extra_js %}
+                <script>
+                document.addEventListener("DOMContentLoaded", function () {
+
+                    const deleteButtons = document.querySelectorAll(
+                        ".btn-delete-project"
+                    );
+
+                    const deleteProjectId = document.getElementById(
+                        "deleteProjectId"
+                    );
+
+                    const deleteProjectName = document.getElementById(
+                        "deleteProjectName"
+                    );
+
+                    deleteButtons.forEach(function (button) {
+
+                        button.addEventListener("click", function () {
+
+                            const id = this.dataset.id;
+                            const name = this.dataset.name;
+
+                            deleteProjectId.value = id;
+                            deleteProjectName.textContent = name;
+
+                        });
+
+                    });
+
+                });
+                </script>
+                {% endblock extra_js %}
+{% endblock content %}
