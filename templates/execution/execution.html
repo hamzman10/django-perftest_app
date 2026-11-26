@@ -1,0 +1,589 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container-fluid main-container">
+
+    <h3 class="mb-4">Exécution des tests</h3>
+
+    <!-- SELECTION PROJET / SCENARIO -->
+    <div class="panel">
+
+        <h5 class="section-title">Sélection du scénario</h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">
+                    Projet <span class="required">*</span>
+                </label>
+
+                <select id="projectSelect" class="form-select">
+                    <option value="">Chargement des projets...</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">
+                    Scénario <span class="required">*</span>
+                </label>
+
+                <select id="scenarioSelect" class="form-select" disabled>
+                    <option value="">Sélectionner un scénario</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div id="scenarioInfo" class="alert alert-light d-none">
+            <strong id="scenarioName"></strong>
+            <div id="scenarioDescription" class="text-muted"></div>
+        </div>
+
+    </div>
+
+
+    <!-- CONFIGURATION HTTP -->
+    <div class="panel">
+
+        <h5 class="section-title">Requête HTTP</h5>
+
+        <div class="row g-2 mb-3">
+
+            <div class="col-md-2">
+                <select id="method" class="form-select method-select">
+                    <option>GET</option>
+                    <option>POST</option>
+                    <option>PUT</option>
+                    <option>PATCH</option>
+                    <option>DELETE</option>
+                </select>
+            </div>
+
+            <div class="col-md-8">
+                <input type="text"
+                       id="url"
+                       class="form-control"
+                       placeholder="https://serveur/api/endpoint">
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-success w-100"
+                        id="btnTestHttp">
+                    Tester la requête
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- ONGLETS POSTMAN -->
+        <ul class="nav nav-tabs" id="requestTabs">
+
+            <li class="nav-item">
+                <button class="nav-link active"
+                        data-bs-toggle="tab"
+                        data-bs-target="#headersTab">
+                    Headers
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#paramsTab">
+                    Params
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#bodyTab">
+                    Body
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#authTab">
+                    Auth
+                </button>
+            </li>
+
+        </ul>
+
+
+        <div class="tab-content">
+
+            <!-- HEADERS -->
+            <div class="tab-pane fade show active" id="headersTab">
+
+                <label class="form-label">
+                    Request Headers (JSON)
+                </label>
+
+                <textarea id="headers"
+                          class="form-control editor"
+                          placeholder='{"Content-Type":"application/json"}'></textarea>
+
+            </div>
+
+
+            <!-- PARAMS -->
+            <div class="tab-pane fade" id="paramsTab">
+
+                <label class="form-label">
+                    Query Parameters (JSON)
+                </label>
+
+                <textarea id="params"
+                          class="form-control editor"
+                          placeholder='{"page":1,"limit":10}'></textarea>
+
+            </div>
+
+
+            <!-- BODY -->
+            <div class="tab-pane fade" id="bodyTab">
+
+                <label class="form-label">
+                    Request Body (JSON)
+                </label>
+
+                <textarea id="body"
+                          class="form-control editor"
+                          placeholder='{"nom":"test"}'></textarea>
+
+            </div>
+
+
+            <!-- AUTH -->
+            <div class="tab-pane fade" id="authTab">
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+                            Type d'authentification
+                        </label>
+
+                        <select id="authType" class="form-select">
+                            <option value="NONE">No Auth</option>
+                            <option value="BEARER">Bearer Token</option>
+                            <option value="BASIC">Basic Auth</option>
+                            <option value="API_KEY">API Key</option>
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <label class="form-label">
+                            Configuration Auth (JSON)
+                        </label>
+
+                        <textarea id="authConfig"
+                                  class="form-control editor"
+                                  placeholder='{"token":"..."}'></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PARAMETRES DE CHARGE -->
+    <div class="panel">
+
+        <h5 class="section-title">
+            Paramètres de charge
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Moteur</label>
+
+                <select id="engine" class="form-select">
+                    <option value="k6">k6</option>
+                    <option value="locust">Locust</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Durée (secondes)</label>
+                <input type="number" id="duration"
+                       class="form-control charge-input">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Nombre de threads</label>
+                <input type="number" id="threads"
+                       class="form-control charge-input">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Ramp-up (secondes)</label>
+                <input type="number" id="rampUp"
+                       class="form-control charge-input">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Think time (secondes)</label>
+                <input type="number" id="thinkTime"
+                       class="form-control charge-input">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Threads initiaux</label>
+                <input type="number" id="initialThreads"
+                       class="form-control charge-input">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Threads maximum</label>
+                <input type="number" id="maxThreads"
+                       class="form-control charge-input">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Répétitions</label>
+                <input type="number" id="repetitions"
+                       class="form-control charge-input">
+            </div>
+
+        </div>
+
+        <button class="btn btn-primary"
+                id="btnLaunchTest">
+            Lancer le test
+        </button>
+
+    </div>
+
+
+    <!-- RESULTAT HTTP -->
+    <div class="panel">
+
+        <h5 class="section-title">Résultat de la requête HTTP</h5>
+
+        <div class="row mb-3">
+
+            <div class="col-md-3">
+                <label class="form-label">Status HTTP</label>
+                <input id="httpStatus"
+                       class="form-control"
+                       readonly>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Temps de réponse (ms)</label>
+                <input id="responseTime"
+                       class="form-control"
+                       readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Erreur</label>
+                <input id="httpError"
+                       class="form-control"
+                       readonly>
+            </div>
+
+        </div>
+
+        <ul class="nav nav-tabs">
+
+            <li class="nav-item">
+                <button class="nav-link active"
+                        data-bs-toggle="tab"
+                        data-bs-target="#responseHeadersTab">
+                    Response Headers
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#responseBodyTab">
+                    Response Body
+                </button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content">
+
+            <div class="tab-pane fade show active"
+                 id="responseHeadersTab">
+
+                <textarea id="responseHeaders"
+                          class="form-control editor result-editor"
+                          readonly></textarea>
+
+            </div>
+
+            <div class="tab-pane fade"
+                 id="responseBodyTab">
+
+                <textarea id="responseBody"
+                          class="form-control editor result-editor"
+                          readonly></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="message" class="alert d-none"></div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+const URL_PROJECTS = "{% url 'liste_projets_execution' %}";
+
+const URL_SCENARIOS = "{% url 'liste_scenarios_execution' 999999 %}";
+
+const URL_DETAIL = "{% url 'detail_scenario_execution' 999999 %}";
+
+
+// Afficher les messages
+function showMessage(message, type = "success") {
+
+    const box = document.getElementById("message");
+
+    box.className = "alert alert-" + type;
+    box.textContent = message;
+
+    box.classList.remove("d-none");
+}
+
+
+// Conversion objet JSON vers texte
+function jsonText(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    if (typeof value === "string") {
+        return value;
+    }
+
+    return JSON.stringify(value, null, 4);
+}
+
+
+// Charger les projets
+async function loadProjects() {
+
+    const response = await fetch(URL_PROJECTS);
+    const data = await response.json();
+
+    const select = document.getElementById("projectSelect");
+
+    select.innerHTML =
+        '<option value="">Sélectionner un projet</option>';
+
+    if (!data.success) {
+        showMessage("Impossible de charger les projets.", "danger");
+        return;
+    }
+
+    data.projets.forEach(project => {
+
+        const option = document.createElement("option");
+
+        option.value = project.id_project;
+        option.textContent = project.name_pr;
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+// Charger les scénarios d'un projet
+async function loadScenarios(idProject) {
+
+    const select = document.getElementById("scenarioSelect");
+
+    select.innerHTML =
+        '<option value="">Chargement...</option>';
+
+    select.disabled = true;
+
+    const url = URL_SCENARIOS.replace(
+        "999999",
+        idProject
+    );
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    select.innerHTML =
+        '<option value="">Sélectionner un scénario</option>';
+
+    if (!data.success) {
+        showMessage("Erreur de chargement des scénarios.", "danger");
+        return;
+    }
+
+    data.scenarios.forEach(scenario => {
+
+        const option = document.createElement("option");
+
+        option.value = scenario.id_scenario;
+        option.textContent = scenario.name_scenario;
+
+        select.appendChild(option);
+
+    });
+
+    select.disabled = false;
+
+}
+
+
+// Charger les détails d'un scénario
+async function loadScenarioDetail(idScenario) {
+
+    const url = URL_DETAIL.replace(
+        "999999",
+        idScenario
+    );
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!data.success) {
+        showMessage(data.message, "danger");
+        return;
+    }
+
+    const s = data.scenario;
+    const c = data.configuration;
+
+    // Informations générales
+    document.getElementById("scenarioName").textContent =
+        s.name_scenario;
+
+    document.getElementById("scenarioDescription").textContent =
+        s.description || "";
+
+    document.getElementById("scenarioInfo").classList.remove("d-none");
+
+
+    // Configuration HTTP
+    document.getElementById("url").value = c.url || "";
+
+    document.getElementById("method").value =
+        (c.method || "GET").toUpperCase();
+
+    document.getElementById("headers").value =
+        jsonText(c.headers);
+
+    document.getElementById("params").value =
+        jsonText(c.params);
+
+    document.getElementById("body").value =
+        jsonText(c.body);
+
+    document.getElementById("authType").value =
+        c.auth_type || "NONE";
+
+    document.getElementById("authConfig").value =
+        jsonText(c.auth_config);
+
+
+    // Paramètres de charge
+    document.getElementById("duration").value =
+        s.duree_secondes ?? "";
+
+    document.getElementById("threads").value =
+        s.nb_threads ?? "";
+
+    document.getElementById("rampUp").value =
+        s.ramp_up ?? 0;
+
+    document.getElementById("thinkTime").value =
+        s.think_time ?? 0;
+
+    document.getElementById("initialThreads").value =
+        s.nb_threads_initial ?? "";
+
+    document.getElementById("maxThreads").value =
+        s.nb_threads_max ?? "";
+
+    document.getElementById("repetitions").value =
+        s.nb_repetitions ?? 1;
+
+    // Réinitialiser les anciens résultats
+    document.getElementById("httpStatus").value = "";
+    document.getElementById("responseTime").value = "";
+    document.getElementById("httpError").value = "";
+    document.getElementById("responseHeaders").value = "";
+    document.getElementById("responseBody").value = "";
+
+}
+
+
+// Changement du projet
+document.getElementById("projectSelect")
+    .addEventListener("change", function() {
+
+        document.getElementById("scenarioInfo")
+            .classList.add("d-none");
+
+        const idProject = this.value;
+
+        if (!idProject) {
+            document.getElementById("scenarioSelect").innerHTML =
+                '<option value="">Sélectionner un scénario</option>';
+
+            document.getElementById("scenarioSelect").disabled = true;
+            return;
+        }
+
+        loadScenarios(idProject);
+
+    });
+
+
+// Changement du scénario
+document.getElementById("scenarioSelect")
+    .addEventListener("change", function() {
+
+        if (this.value) {
+            loadScenarioDetail(this.value);
+        }
+
+    });
+
+
+// Initialisation
+document.addEventListener("DOMContentLoaded", function() {
+    loadProjects();
+});
+
+</script>
+
+{% endblock %}

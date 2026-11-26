@@ -334,3 +334,48 @@ html, body {
     z-index: 2;
     background-color: #191c24;
 }
+
+
+/* css pour la page scenarion */
+
+
+/* Conteneur des blocs */
+.card {
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+/* Entête des blocs */
+.card-header {
+    border-bottom: 2px solid #ced4da;
+    padding: 14px 20px;
+}
+
+.card-header h5 {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* Corps */
+.card-body {
+    padding: 22px;
+}
+
+/* Labels */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+/* Champs */
+.form-control,
+.form-select {
+    border-radius: 5px;
+    min-height: 40px;
+}
+
+/* Espacement */
+.card + .card {
+    margin-top: 20px;
+}

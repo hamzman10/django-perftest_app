@@ -1,0 +1,758 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid pt-4 px-4">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="mb-0">Configuration du scénario</h3>
+            <p class="text-muted">
+                Préparation et configuration des tests de performance
+            </p>
+        </div>
+    </div>
+
+    <!-- BLOC 1 : PROJET ET SCENARIO -->
+    <div class="card mb-4">
+        <div class="card-header bg-transparent">
+            <h5 class="mb-0">1. Projet et scénario</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" id="name_scenario" class="form-control" placeholder="Scenario">
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="objectif_scenario"  class="form-control" placeholder="Objectif">
+                </div>
+                <div class="col-12">
+                    <input type="text" id="description_scenario" class="form-control" placeholder="Scenario Description">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Project</label>
+                    <select class="form-select" id="projectSelect">
+                        <option selected disabled>Choose un project</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                     <label class="form-label">URL </label>
+                      <input type="text" class="form-control"  id="projectUrl" placeholder="Project URL ">
+                </div>
+                <div class="col-12">
+                    <input type="text" class="form-control" id="projectDescription" placeholder="Project Description">
+                </div>
+                <div class="col-md-6">
+                    <label for="environmentSelect">Environnement</label>
+
+                    <select id="environmentSelect"
+                            name="id_envir"
+                            class="form-select">
+
+                        <option value="">-- Sélectionner un environnement --</option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="testToolSelect">Outil de test</label>
+
+                    <select id="testToolSelect"
+                            name="id_outilt"
+                            class="form-select">
+
+                        <option value="">-- Sélectionner un outil --</option>
+
+                    </select>
+
+                   
+                </div>
+
+                
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- BLOC 2 : REQUETE -->
+    <div class="card mb-4">
+        <div class="card-header bg-transparent">
+            <h5 class="mb-0">2. Configuration de la requête</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+
+              <div class="col-md-3">
+
+                    <label class="form-label">Méthode HTTP</label>
+
+                    <select class="form-select"
+                            id="protocolSelect"
+                            name="id_protocol">
+
+                        <option value="">-- Sélectionner une méthode --</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-9">
+                    <label class="form-label">URL / Endpoint</label>
+                    <input type="url" id="url_endpoint" class="form-control"
+                           placeholder="https://serveur/api/endpoint">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Headers</label>
+                    <textarea id="headers" class="form-control" rows="3"
+                        placeholder="Authorization: Bearer ..."></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Paramètres URL</label>
+                    <textarea class="form-control" id="params_url" rows="2"
+                        placeholder="Paramètres de la requête"></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Body / Payload (JSON)</label>
+                    <textarea class="form-control" id="body" rows="5"
+                        placeholder='{"key": "value"}'></textarea>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+  <!-- BLOC 3 : PARAMETRES DE CHARGE -->
+    <div class="card mb-4">
+        <div class="card-header bg-transparent">
+            <h5 class="mb-0">3. Paramètres de charge</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">Test Type</label>
+                    <select class="form-select" id="type_test">
+                        <option value="">-- Sélectionner un test --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Objectifs</label>
+                    <input type="text" class="form-control"
+                        id="objectif" placeholder="Objectif du test">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control"
+                        id="description_test"
+                        placeholder="Description du type de test">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Nombre de Threads / VUs</label>
+                    <input type="number" class="form-control"
+                        id="nb_threads" placeholder="100">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Ramp-up (secondes)</label>
+                    <input type="number" class="form-control"
+                        id="ramp_up" placeholder="60">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Durée du test (secondes)</label>
+                    <input type="number" class="form-control"
+                        id="duree_test" placeholder="300">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Nombre de répétitions</label>
+                    <input type="number" class="form-control"
+                        id="nb_repetitions" value="1">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Nombre de Threads Max</label>
+                    <input type="number" class="form-control" id="nb_threads_max" placeholder="/">
+                     
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Nombre de Threads Initial</label>
+                    <input type="number" class="form-control" id="nb_threads_initial" placeholder="/">
+                     
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!-- BLOC 4 : BOUTONS ACTIONS -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-end gap-3">
+
+            <button type="button"
+                    id="btnReset"
+                    class="btn btn-secondary">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Réinitialiser
+            </button>
+
+            <button type="button"
+                    id="btnEnregistrer"
+                    class="btn btn-primary">
+                <i class="bi bi-save"></i>
+                Enregistrer le test
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirmation ajout scénario -->
+<div class="modal fade" id="successScenarioModal"
+     tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    Scénario enregistré
+                </h5>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <i class="bi bi-check-circle-fill text-success"
+                   style="font-size: 55px;"></i>
+
+                <h5 class="mt-3">
+                    Scénario ajouté avec succès !
+                </h5>
+
+                <p class="text-muted">
+                    Votre scénario a été enregistré.
+                    Que souhaitez-vous faire maintenant ?
+                </p>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        onclick="nouveauScenario()">
+                    <i class="bi bi-plus-circle"></i>
+                    Ajouter un autre
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="allerExecution()">
+                    <i class="bi bi-play-circle"></i>
+                    Passer à l'exécution
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- fetch api pour les project  -->
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const projectSelect = document.getElementById('projectSelect');
+
+    const projectUrl = document.getElementById('projectUrl');
+
+    const projectDescription = document.getElementById('projectDescription');
+
+
+    // Charger les projets depuis Django
+
+    fetch("{% url 'scenario:projects_list_api' %}")
+
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error('Erreur lors du chargement des projets');
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+            if (data.success) {
+
+                data.projects.forEach(project => {
+
+                    const option = document.createElement('option');
+
+                    option.value = project.id_project;
+
+                    option.textContent = project.name_pr;
+
+                    // Informations supplémentaires
+
+                    option.dataset.url = project.base_url || '';
+
+                    option.dataset.description = project.description_pr || '';
+
+                    projectSelect.appendChild(option);
+
+                });
+
+            }
+
+        })
+
+        .catch(error => {
+
+            console.error('Erreur :', error);
+
+            alert('Impossible de charger les projets.');
+
+        });
+
+
+    // Lorsqu'un projet est sélectionné
+
+    projectSelect.addEventListener('change', function () {
+
+        const selectedOption = this.options[this.selectedIndex];
+
+        projectUrl.value = selectedOption.dataset.url || '';
+
+        projectDescription.value = selectedOption.dataset.description || '';
+
+    });
+
+});
+
+</script>
+<!--Fetch api pour les environement et test tool -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    fetch("{% url 'scenario:ref_liste_api' %}")
+
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP : " + response.status);
+            }
+
+            return response.json();
+        })
+
+        .then(data => {
+
+            if (data.success) {
+
+                // Charger les environnements
+                const environmentSelect =
+                    document.getElementById("environmentSelect");
+
+                data.environment.forEach(item => {
+
+                    const option = document.createElement("option");
+
+                    option.value = item.id_envir;
+                    option.textContent = item.desingnation_env;
+
+                    environmentSelect.appendChild(option);
+                });
+
+
+                // Charger les outils de test
+                const testToolSelect =
+                    document.getElementById("testToolSelect");
+
+                data.testtool.forEach(item => {
+
+                    const option = document.createElement("option");
+
+                    option.value = item.id_outilt;
+                    option.textContent = item.desingnation_outilt;
+
+                    testToolSelect.appendChild(option);
+                });
+
+            }
+
+        })
+
+        .catch(error => {
+            console.error("Erreur de chargement des listes :", error);
+        });
+
+});
+</script>
+<!-- fetch api pour type de teste-->
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+
+    const selectTypeTest = document.getElementById("type_test");
+
+    // Vérifier que le select existe
+    if (!selectTypeTest) {
+        console.error("Select type_test introuvable !");
+        return;
+    }
+
+    // Appel API Django
+    fetch("/scenario/api/type-test/")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP : " + response.status);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            console.log("Données reçues :", data);
+
+            if (data.success && Array.isArray(data.typetest)) {
+
+                // Vider la liste
+                selectTypeTest.innerHTML =
+                    '<option value="">-- Sélectionner un type de test --</option>';
+
+                // Remplir la liste déroulante
+                data.typetest.forEach(test => {
+
+                    const option = document.createElement("option");
+
+                    option.value = test.id_type_test;
+                    option.textContent = test.libelle;
+
+                    selectTypeTest.appendChild(option);
+
+                });
+
+                console.log("Types de tests chargés :", data.typetest.length);
+
+            } else {
+                console.error("Format JSON incorrect !");
+            }
+
+        })
+        .catch(error => {
+            console.error("Erreur Fetch :", error);
+        });
+
+
+    // Sélection d'un type de test
+    selectTypeTest.addEventListener("change", function () {
+
+        const idType = this.value;
+
+        if (!idType) return;
+
+        fetch("/scenario/api/type-test/")
+            .then(response => response.json())
+            .then(data => {
+
+                const test = data.typetest.find(
+                    t => String(t.id_type_test) === String(idType)
+                );
+
+                if (test) {
+
+                    document.getElementById("objectif").value =
+                        test.objectif || "";
+
+                    document.getElementById("description_test").value =
+                        test.description || "";
+
+                    document.getElementById("nb_threads").value =
+                        test.nb_threads ?? "";
+
+                    document.getElementById("ramp_up").value =
+                        test.ramp_up ?? "";
+
+                    document.getElementById("duree_test").value =
+                        test.duree_secondes ?? "";
+
+                    document.getElementById("nb_threads_max").value =
+                        test.nb_threads_max ?? "";
+
+                    document.getElementById("nb_threads_initial").value =
+                        test.nb_threads_initial ?? "";
+
+                }
+
+            })
+            .catch(error => console.error(error));
+
+    });
+
+});
+</script>
+
+<!-- fetchapi pour les protocol -->
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+
+    const protocolSelect = document.getElementById("protocolSelect");
+
+    fetch("{% url 'scenario:ref_protocol' %}")
+
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP : " + response.status);
+            }
+
+            return response.json();
+        })
+
+        .then(data => {
+
+            console.log("Protocoles reçus :", data);
+
+            if (data.success && Array.isArray(data.protocol)) {
+
+                data.protocol.forEach(item => {
+
+                    const option = document.createElement("option");
+
+                    option.value = item.id_protocol;
+
+                    option.textContent = item.desingnation_protocol;
+
+                    protocolSelect.appendChild(option);
+
+                });
+
+            } else {
+                console.error("Format JSON incorrect :", data);
+            }
+
+        })
+
+        .catch(error => {
+            console.error("Erreur chargement protocoles :", error);
+        });
+
+});
+</script>
+
+<!-- action de bouton renitialiser -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    document.getElementById("btnReset").addEventListener("click", function () {
+
+        // Vider les champs texte, numériques et URL
+        document.querySelectorAll(
+            'input[type="text"], input[type="number"], input[type="url"], textarea'
+        ).forEach(element => {
+            element.value = "";
+        });
+
+        // Réinitialiser les listes déroulantes
+        document.querySelectorAll("select").forEach(select => {
+            select.selectedIndex = 0;
+        });
+
+        // Remettre le nombre de répétitions à 1
+        document.getElementById("nb_repetitions").value = 1;
+
+    });
+
+});
+</script>
+<!-- fetch api pour le bouton save -->
+
+
+<script>
+  
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btnEnregistrer = document.getElementById("btnEnregistrer");
+
+    btnEnregistrer.addEventListener("click", async function () {
+
+        // Éviter les doubles clics
+        btnEnregistrer.disabled = true;
+        btnEnregistrer.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Enregistrement...';
+
+        try {
+
+            // Récupérer les valeurs des champs
+            const data = {
+
+                // Informations du scénario
+                name_scenario: document.getElementById("name_scenario").value.trim(),
+                description: document.getElementById("description_scenario").value.trim(),
+                objectif: document.getElementById("objectif_scenario").value.trim(),
+
+                // Projet
+                id_project: document.getElementById("projectSelect").value,
+
+                // Référentiels
+                id_envir: document.getElementById("environmentSelect").value,
+                id_outilt: document.getElementById("testToolSelect").value,
+                id_type_test: document.getElementById("type_test").value,
+                id_protocol: document.getElementById("protocolSelect").value,
+
+                // Méthode HTTP : GET, POST, PUT...
+                method: document.getElementById("protocolSelect")
+                    .selectedOptions[0]?.textContent.trim(),
+
+                // Requête HTTP
+                url_endpoint: document.getElementById("url_endpoint").value.trim(),
+                headers: document.getElementById("headers").value.trim() || "{}",
+                params_url: document.getElementById("params_url").value.trim() || "{}",
+                body: document.getElementById("body").value.trim(),
+
+                // Paramètres de charge
+                duree_secondes: document.getElementById("duree_test").value,
+                nb_threads: document.getElementById("nb_threads").value,
+                ramp_up: document.getElementById("ramp_up").value || 0,
+                think_time: 0,
+
+                nb_repetitions: document.getElementById("nb_repetitions").value || 1,
+
+                nb_threads_max: document.getElementById("nb_threads_max").value || null,
+                nb_threads_initial: document.getElementById("nb_threads_initial").value || null,
+
+                step_threads: null,
+                step_duration_seconds: null,
+                volume_donnees: null,
+                seuils_performance: null
+            };
+
+            // Vérification des champs obligatoires
+            const requiredFields = [
+                ["name_scenario", "Nom du scénario"],
+                ["id_project", "Projet"],
+                ["id_type_test", "Type de test"],
+                ["id_envir", "Environnement"],
+                ["id_outilt", "Outil de test"],
+                ["id_protocol", "Méthode HTTP"],
+                ["url_endpoint", "URL"],
+                ["duree_secondes", "Durée du test"],
+                ["nb_threads", "Nombre de threads"]
+            ];
+
+            for (const [field, label] of requiredFields) {
+
+                if (!data[field]) {
+                    throw new Error("Le champ " + label + " est obligatoire.");
+                }
+            }
+
+            // Vérifier le format JSON des champs HTTP
+            JSON.parse(data.headers);
+            JSON.parse(data.params_url);
+
+            if (data.body) {
+                JSON.parse(data.body);
+            }
+
+            // Vérifier l'URL
+            if (!/^https?:\/\//i.test(data.url_endpoint)) {
+                throw new Error("Veuillez saisir une URL valide commençant par http:// ou https://.");
+            }
+
+            // Envoi vers Django
+            const response = await fetch("/scenario/save/", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || "Erreur lors de l'enregistrement.");
+            }
+
+            // Mémoriser l'identifiant du scénario
+            window.idScenarioEnregistre = result.id_scenario;
+
+            console.log("Scénario enregistré :", result);
+
+            // Afficher la confirmation
+            const modalElement = document.getElementById("successScenarioModal");
+
+            const modal = new bootstrap.Modal(modalElement);
+
+            modal.show();
+
+        } catch (error) {
+
+            console.error("Erreur enregistrement :", error);
+
+            alert(error.message);
+
+        } finally {
+
+            btnEnregistrer.disabled = false;
+
+            btnEnregistrer.innerHTML =
+                '<i class="bi bi-save"></i> Enregistrer le test';
+        }
+
+    });
+
+});
+
+// Récupération du token CSRF Django
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== "") {
+
+        const cookies = document.cookie.split(";");
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (cookie.startsWith(name + "=")) {
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+</script>
+{% endblock %}

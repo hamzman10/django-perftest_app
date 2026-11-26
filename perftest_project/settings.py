@@ -35,6 +35,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'execution.apps.ExecutionConfig',
+    'scenario.apps.ScenarioConfig',
+    'ref_models.apps.RefModelsConfig',
     'projects.apps.ProjectsConfig',
     'accuil.apps.AccuilConfig',
     'accounts.apps.AccountsConfig',
